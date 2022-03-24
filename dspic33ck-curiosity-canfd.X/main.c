@@ -24,7 +24,7 @@
 
 #include "mcc_generated_files/system/system.h"
 #include "mcc_generated_files/can/can1.h"
-#include "mcc_generated_files/adc/adc1.h"
+#include "mcc_generated_files/system/pins.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -50,7 +50,24 @@ static uint8_t CAN_DlcToDataBytesGet(const enum CAN_DLC dlc)
     return dlcByteSize[dlc];
 }
 
-void printCanMsgObjStruct(struct CAN_MSG_OBJ *rxCanMsg)
+static void PrintWelcomeMessage(void)
+{
+    printf("\r\n");
+    printf("*******************************************************\r\n");
+    printf("dsPIC33CK Curiosity CAN FD Demo\r\n");
+    printf("*******************************************************\r\n");
+}
+
+static void PrintFeaturesMessage(void)
+{
+    
+    printf("DEMO KEY FEATURES:\r\n");
+    printf("* CAN-FD communication using the on-chip CAN-FD peripheral in dsPIC33CK256MP508\r\n");
+    printf("* Loopback CAN-FD data frame if received  message ID is 0x64 or 0x65 from the bus\r\n");
+    printf("* Green LED will blink if data message  with 0x64 or 0x65 is received and\r\n transmitted back successfully\r\n\r\n");
+}
+
+static void printCanMsgObjStruct(struct CAN_MSG_OBJ *rxCanMsg)
 {
     printf("------------------------------------------------------------------\r\n");
     printf("[*] Msg ID: %lu\r\n", rxCanMsg->msgId);
@@ -81,6 +98,8 @@ static enum CAN_TX_MSG_REQUEST_STATUS canMessageWrite(
     gMsg.field.dlc = len;
     gMsg.field.brs = brs;
     gMsg.data = data;
+    printf("\r\n[*] Transmitting Message Frame:\r\n---------\r\n");
+    printCanMsgObjStruct(&gMsg);
     return CAN_FD.Transmit(fifoNum, &gMsg);
 }
 
@@ -90,7 +109,8 @@ bool readCanMsgObjTasks(struct CAN_MSG_OBJ *rxMsg)
     if(CAN_FD.ReceivedMessageCountGet() > 0) 
     {
         CAN_FD.Receive(rxMsg);
-        printf("[*] Following Message received:\r\n---------\r\n");
+        LED_GREEN_SetHigh();
+        printf("\r\n[*] Received Message Frame:\r\n---------\r\n");
         printCanMsgObjStruct(rxMsg);
         status = true;
     }
@@ -118,6 +138,7 @@ void PrintIfAnyRxErrors(void)
     //Print if node reached RX Active Error state
     if(CAN_FD.IsRxErrorActive()&&(!rxErrorActiveOccured))
     {
+        LED_RED_SetHigh();
         printf("RX Active Error Occurred, 0 < Error Count < 95 \r\n");
         rxErrorActiveOccured = true;
     }
@@ -144,6 +165,7 @@ void PrintIfAnyTxErrors(void)
     //Print if node reached TX Active Error state
     if(CAN_FD.IsTxErrorActive()&&(!txErrorActiveOccured))
     {
+        LED_RED_SetHigh();
         printf("TX Active Error Occurred, 0 < Error Count < 95  \r\n");
         txErrorActiveOccured = true;
     }
@@ -165,49 +187,14 @@ void PrintIfAnyTxErrors(void)
     //CAN node reaches Bus-Off state if error count is grater than 255
 }
 
-void ADC1_ChannelCallback (enum ADC_CHANNEL channel, uint16_t adcVal)
-{
-    bool msgStatus;
-    enum ADC_DATA_FRAME {
-        ADC_RESOLUTION_BYTE,
-        ADC_VALUE_HIGH_BYTE,
-        ADC_VALUE_LOW_BYTE
-    };
-    uint8_t data[3] = {ADC_RESOLUTION, adcVal >> 8 , adcVal & 0xFF}; 
-    if(channel == POT_Channel)
-    {
-        gMsg.field.dlc = DLC_3;
-        gMsg.field.frameType = CAN_FRAME_DATA;
-        gMsg.field.formatType = CAN_FD_FORMAT;
-        gMsg.data = &data[0];
-        /*Transmit back the received message*/
-        msgStatus = canMessageWrite(
-                CAN1_TX_TXQ                 //Transmit FIFO 
-                ,gMsg.msgId                 //CAN Message ID
-                ,gMsg.field.idType          //Standard or Extended ID
-                ,gMsg.field.formatType      //CAN_FD_FORMAT for CAN-FD frames
-                ,gMsg.field.frameType       //Data frame or RTR frame
-                ,gMsg.field.dlc             //Data length
-                ,gMsg.field.brs             //Specifies if bit-rate switching is enabled 
-                ,(uint8_t *)gMsg.data       //Data 
-                );
-        if(msgStatus == CAN_TX_MSG_REQUEST_SUCCESS)
-        {
-            printf("ADC value fed to CAN FIFO successfully\r\n");
-        }
-        else
-        {
-            printf("CAN Message Write to FIFO Failure\r\n");
-        }
-    }
-}
-
 int main(void)
 {
     bool msgStatus;
     SYSTEM_Initialize();
     CAN_FD.RxBufferOverFlowCallbackRegister(&CAN_RxBufferOverFlowHandler);
     CAN_FD.BusWakeUpActivityCallbackRegister(&CAN_BusWakeUpActivityHandler);
+    PrintWelcomeMessage();
+    PrintFeaturesMessage();
     while(1)
     {    
         /*Check if any errors while receiving*/
@@ -217,43 +204,32 @@ int main(void)
         msgStatus = readCanMsgObjTasks(&gMsg);
         if(msgStatus)
         {
-            printf("CAN Message Received Successfully\r\n");
-            printf("-----------------------------\r\n");
-            printf("\r\n\r\n****** CAN Transmit ******\r\n");
-            
-            if(gMsg.field.frameType == CAN_FRAME_RTR)
+            LED_RED_SetLow();
+
+            /*Transmit back the received message*/
+            msgStatus = canMessageWrite(
+                    CAN1_TX_TXQ,                //Transmit FIFO 
+                    gMsg.msgId + 20,            //CAN Message ID (receive message ID + 20)
+                    gMsg.field.idType,          //Standard or Extended ID
+                    gMsg.field.formatType,      //CAN_FD_FORMAT for CAN-FD frames
+                    gMsg.field.frameType,       //Data frame or RTR frame
+                    gMsg.field.dlc,             //Data length
+                    gMsg.field.brs,             //Specifies if bit-rate switching is enabled 
+                    (uint8_t *)gMsg.data        //Data 
+                    );
+            if(msgStatus == CAN_TX_MSG_REQUEST_SUCCESS)
             {
-                if(gMsg.msgId == CAN_POT_VALUE_GET_ID)
-                {
-                    ADC1.SoftwareTriggerEnable();
-                }
+                printf("Received CAN Message fed to Transmit FIFO successfully\r\n");
             }
             else
             {
-                /*Transmit back the received message*/
-                msgStatus = canMessageWrite(
-                        CAN1_TX_TXQ,                 //Transmit FIFO 
-                        gMsg.msgId,                 //CAN Message ID
-                        gMsg.field.idType,          //Standard or Extended ID
-                        gMsg.field.formatType,      //CAN_FD_FORMAT for CAN-FD frames
-                        gMsg.field.frameType,       //Data frame or RTR frame
-                        gMsg.field.dlc,             //Data length
-                        gMsg.field.brs,             //Specifies if bit-rate switching is enabled 
-                        (uint8_t *)gMsg.data        //Data 
-                        );
-                if(msgStatus == CAN_TX_MSG_REQUEST_SUCCESS)
-                {
-                    printf("Received CAN Message fed to Transmit FIFO successfully\r\n");
-                }
-                else
-                {
-                    printf("CAN Message Write to FIFO Failure\r\n");
-                }
+                LED_RED_SetHigh();
+                printf("CAN Message Write to FIFO Failure\r\n");
             }
         }
         
         /*Check if any errors while transmitting*/
         PrintIfAnyTxErrors();
-           
+        LED_GREEN_SetLow();
     }
 }

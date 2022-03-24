@@ -7,12 +7,6 @@
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
                      projectFiles="true">
-        <logicalFolder name="adc" displayName="adc" projectFiles="true">
-          <itemPath>mcc_generated_files/adc/adc_interface.h</itemPath>
-          <itemPath>mcc_generated_files/adc/adc_features.h</itemPath>
-          <itemPath>mcc_generated_files/adc/adc_types.h</itemPath>
-          <itemPath>mcc_generated_files/adc/adc1.h</itemPath>
-        </logicalFolder>
         <logicalFolder name="can" displayName="can" projectFiles="true">
           <itemPath>mcc_generated_files/can/can1.h</itemPath>
           <itemPath>mcc_generated_files/can/can_interface.h</itemPath>
@@ -47,11 +41,6 @@
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
                      projectFiles="true">
-        <logicalFolder name="adc" displayName="adc" projectFiles="true">
-          <logicalFolder name="src" displayName="src" projectFiles="true">
-            <itemPath>mcc_generated_files/adc/src/adc1.c</itemPath>
-          </logicalFolder>
-        </logicalFolder>
         <logicalFolder name="can" displayName="can" projectFiles="true">
           <logicalFolder name="src" displayName="src" projectFiles="true">
             <itemPath>mcc_generated_files/can/src/can1.c</itemPath>

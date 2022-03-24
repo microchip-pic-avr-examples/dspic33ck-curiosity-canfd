@@ -43,6 +43,96 @@
 
 /**
  * @ingroup  pinsdriver
+ * @brief    Sets the RE14 GPIO Pin which has a custom name of LED_GREEN to High
+ * @pre      The RE14 must be set as Output Pin             
+ * @return   none  
+ */
+#define LED_GREEN_SetHigh()          (_LATE14 = 1)
+
+/**
+ * @ingroup  pinsdriver
+ * @brief    Sets the RE14 GPIO Pin which has a custom name of LED_GREEN to Low
+ * @pre      The RE14 must be set as Output Pin
+ * @return   none  
+ */
+#define LED_GREEN_SetLow()           (_LATE14 = 0)
+
+/**
+ * @ingroup  pinsdriver
+ * @brief    Toggles the RE14 GPIO Pin which has a custom name of LED_GREEN
+ * @pre      The RE14 must be set as Output Pin
+ * @return   none  
+ */
+#define LED_GREEN_Toggle()           (_LATE14 ^= 1)
+
+/**
+ * @ingroup  pinsdriver
+ * @brief    Reads the value of the RE14 GPIO Pin which has a custom name of LED_GREEN
+ * @return   none  
+ */
+#define LED_GREEN_GetValue()         _RE14
+
+/**
+ * @ingroup  pinsdriver
+ * @brief    Configures the RE14 GPIO Pin which has a custom name of LED_GREEN as Input
+ * @return   none  
+ */
+#define LED_GREEN_SetDigitalInput()  (_TRISE14 = 1)
+
+/**
+ * @ingroup  pinsdriver
+ * @brief    Configures the RE14 GPIO Pin which has a custom name of LED_GREEN as Output
+ * @return   none  
+ */
+#define LED_GREEN_SetDigitalOutput() (_TRISE14 = 0)
+
+/**
+ * @ingroup  pinsdriver
+ * @brief    Sets the RE15 GPIO Pin which has a custom name of LED_RED to High
+ * @pre      The RE15 must be set as Output Pin             
+ * @return   none  
+ */
+#define LED_RED_SetHigh()          (_LATE15 = 1)
+
+/**
+ * @ingroup  pinsdriver
+ * @brief    Sets the RE15 GPIO Pin which has a custom name of LED_RED to Low
+ * @pre      The RE15 must be set as Output Pin
+ * @return   none  
+ */
+#define LED_RED_SetLow()           (_LATE15 = 0)
+
+/**
+ * @ingroup  pinsdriver
+ * @brief    Toggles the RE15 GPIO Pin which has a custom name of LED_RED
+ * @pre      The RE15 must be set as Output Pin
+ * @return   none  
+ */
+#define LED_RED_Toggle()           (_LATE15 ^= 1)
+
+/**
+ * @ingroup  pinsdriver
+ * @brief    Reads the value of the RE15 GPIO Pin which has a custom name of LED_RED
+ * @return   none  
+ */
+#define LED_RED_GetValue()         _RE15
+
+/**
+ * @ingroup  pinsdriver
+ * @brief    Configures the RE15 GPIO Pin which has a custom name of LED_RED as Input
+ * @return   none  
+ */
+#define LED_RED_SetDigitalInput()  (_TRISE15 = 1)
+
+/**
+ * @ingroup  pinsdriver
+ * @brief    Configures the RE15 GPIO Pin which has a custom name of LED_RED as Output
+ * @return   none  
+ */
+#define LED_RED_SetDigitalOutput() (_TRISE15 = 0)
+
+/**
+ * @ingroup  pinsdriver
  * @brief    Initializes the PINS module
  * @return   none  
  */

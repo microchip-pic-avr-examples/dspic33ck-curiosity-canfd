@@ -38,7 +38,6 @@
 #include "../dmt.h"
 #include "../interrupt.h"
 #include "../pins.h"
-#include "../../adc/adc1.h"
 #include "../../can/can1.h"
 #include "../../uart/uart1.h"
 
@@ -47,7 +46,6 @@ void SYSTEM_Initialize(void)
 {
     CLOCK_Initialize();
     PINS_Initialize();
-    ADC1_Initialize();
     CAN1_Initialize();
     DMT_Initialize();
     UART1_Initialize();

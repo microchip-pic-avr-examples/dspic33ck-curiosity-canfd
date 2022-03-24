@@ -41,10 +41,6 @@
 
 void INTERRUPT_Initialize(void)
 {
-    // ADCAN23: ADC AN23 Convert Done
-    // Priority: 1
-    IPC28bits.ADCAN23IP = 1;
-    
     // C1: CAN 1 Combined Error
     // Priority: 1
     IPC6bits.C1IP = 1;
@@ -74,7 +70,6 @@ void INTERRUPT_Initialize(void)
 void INTERRUPT_Deinitialize(void)
 {
     //POR default value of priority
-    IPC28bits.ADCAN23IP = 4;
     IPC6bits.C1IP = 4;
     IPC11bits.DMTIP = 4;
     IPC47bits.U1EVTIP = 4;
