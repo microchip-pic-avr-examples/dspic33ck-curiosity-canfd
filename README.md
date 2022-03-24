@@ -45,8 +45,9 @@ https://www.microchip.com/dsPIC33CK256MP508
 - Start the analyzer log and send CAN-FD data frames with message ID 101(0x64), 102(0x65) and 103(0x66)
 - Sending CAN FD standard or extended data frame with message ID 100 (0x64) or 101 (0x65) on the CAN bus, the dsPIC33CK Curiosity will transmit back the same data with message ID to 120 (0x78) and 121 (0x79) respectively on the bus (Loopback). Green LED will blink acknowledging that data message is received and transmitted back successfully.
 - Sending any message with ID other than 100 or 101, the dsPIC33CK Curiosity will ignore the message and no response is observed.
+- Received and transmitted frames from Curiosity can also be viewed from the serial terminal for debug purposes
 
-Following is a snip of the log when messages with ID 0x64, 0x65 and 0x66 are sent from the analyzer one after the other<br>
+Following is a snip of the CAN analyzer log when messages with ID 0x64, 0x65 and 0x66 are sent from the analyzer one after the other<br>
 
 ![CAN-FD Analyzer log](images/analyzer_log.jpg)
 
