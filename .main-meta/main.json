@@ -4,10 +4,10 @@
    "content":{
       "metaDataVersion":"1.3.0",
       "name":"com.microchip.mplabx.project.dspic33ck-curiosity-canfd",
-      "version":"x.x.x",
-      "displayName":"xxxxxxxxxxxxxxx",
+      "version":"1.0.0",
+      "displayName":"dsPIC33CK Curiosity Development Board - CAN-FD Demo",
       "projectName":"dspic33ck-curiosity-canfd",
-      "shortDescription":"xxxxxxxxxxxxxxx",
+      "shortDescription":"This is CAN-FD demo for dsPIC33CK Curiosity board",
       "ide":{
          "name":"MPLABX",
          "semverRange":">=5.40.0"
@@ -17,12 +17,12 @@
          "semverRange":"^1.50.0"
       },
       "dfp":{
-         "name":"xxxxxxxxxxxxxxx",
-         "semverRange":">=x.x.x"
+         "name":"dsPIC33CK-MP_DFP",
+         "semverRange":">=1.7.208"
       },
 	  "configurator": {
          "name": "MCC",
-         "semverRange": ">=4.0.1"
+         "semverRange": ">=5.1.0"
       },
       "device":{
          "metaDataVersion":"1.0.0",
@@ -30,16 +30,16 @@
          "content":{
             "metaDataVersion":"1.0.0",
             "category":"com.microchip.device",
-            "name":"xxxxxxxxxxxxxxx",
+            "name":"dsPIC33CK256MP508",
             "versionRange":"*"
          }
       },
 	  "peripherals":[
-         "GPIO",
+         "CAN FD",
       ],
       "keywords":[
-         "GPIO",
-         "UART"
+         "CAN FD",
+         "CAN",
       ]
    }
 }
