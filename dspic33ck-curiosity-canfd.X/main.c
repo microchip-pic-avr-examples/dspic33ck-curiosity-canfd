@@ -67,12 +67,23 @@ static void PrintFeaturesMessage(void)
     printf("* Green LED will blink if data message  with 0x64 or 0x65 is received and\r\n transmitted back successfully\r\n\r\n");
 }
 
+static void printCanDatainHex(struct CAN_MSG_OBJ *rxCanMsg)
+{
+    uint8_t i=0;
+    for(i=0;i<CAN_DlcToDataBytesGet(rxCanMsg->field.dlc);i++)
+    {
+        printf("0x%X ",rxCanMsg->data[i]);
+    }
+    printf("\r\n");
+}
+
 static void printCanMsgObjStruct(struct CAN_MSG_OBJ *rxCanMsg)
 {
     printf("------------------------------------------------------------------\r\n");
-    printf("[*] Msg ID: %lu\r\n", rxCanMsg->msgId);
-    printf("[*] Msg Data: %s\r\n", rxCanMsg->data);
-    printf("[*] DLC: %d\r\n", CAN_DlcToDataBytesGet(rxCanMsg->field.dlc));
+    printf("[*] Msg ID: 0x%lX\r\n", rxCanMsg->msgId);
+    printf("[*] Msg Data:");
+    printCanDatainHex(rxCanMsg);
+    printf("[*] DLC: 0x%X\r\n", CAN_DlcToDataBytesGet(rxCanMsg->field.dlc));
     printf("[*] IdType: %s\r\n", rxCanMsg->field.idType == CAN_FRAME_STD ? "CAN_FRAME_STD" : "CAN_FRAME_EXT");
     printf("[*] FrameType: %s\r\n", rxCanMsg->field.frameType == CAN_FRAME_DATA ? "CAN_FRAME_DATA" : "CAN_FRAME_RTR");
     printf("[*] BRS: %s\r\n", rxCanMsg->field.brs == CAN_NON_BRS_MODE ? "CAN_NON_BRS_MODE" : "CAN_BRS_MODE");
