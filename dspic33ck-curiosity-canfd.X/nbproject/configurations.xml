@@ -516,6 +516,8 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-2beff"/>
+        <property key="programmerToGoFilePath"
+                  value="C:/MCU16/GIT_Examples/dspic33ck-curiosity-canfd/dspic33ck-curiosity-canfd.X/debug/default/dspic33ck-curiosity-canfd_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>

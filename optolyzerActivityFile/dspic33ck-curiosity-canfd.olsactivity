@@ -5,7 +5,7 @@
       <Action _object="{E71B63CE-C05C-4341-940F-AED11BCD4F76}" _version="1.0" _class="K2L.Viewer.Activities.Actions.MessageAction" IsEnabled="True">
         <Channel Channel="CAN 2" ChannelType="037d851e-f296-4ad1-9581-b6efb5864a32" Device="Device 1" />
         <Message _object="{E416BBE5-0251-4E8C-82DD-3A258A4E1E24}" _version="1.0" _class="K2L.Viewer.Activities.Messages.CanFdDataMessageWrapper">
-          <Stream bin="DwAAABgBIFUoAjABOAFADEimBAQAAAAIZBgBDAAAAE1JQ1JPQ0hJUAAAAA==" />
+          <Stream bin="DwAAABgBIFUoAjABOAFADEisJAQAAAAIZBgBDAAAAE1JQ1JPQ0hJUAAAAA==" />
           <Id>
             <Value _int32="100" />
           </Id>
@@ -15,17 +15,17 @@
       <Action _object="{E71B63CE-C05C-4341-940F-AED11BCD4F76}" _version="1.0" _class="K2L.Viewer.Activities.Actions.MessageAction" IsEnabled="True">
         <Channel Channel="CAN 2" ChannelType="037d851e-f296-4ad1-9581-b6efb5864a32" Device="Device 1" />
         <Message _object="{E416BBE5-0251-4E8C-82DD-3A258A4E1E24}" _version="1.0" _class="K2L.Viewer.Activities.Messages.CanFdDataMessageWrapper">
-          <Stream bin="DwAAABgBIFUoAjABOAFADEinBAYAAAAIZRABGAFAAAAAQUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVogYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXogMTIzNDU2Nzg5MA==" />
+          <Stream bin="DwAAABgBIFUoAjABOAFADEitJAYAAAAIZRABGAFAAAAAQUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVogYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXogMTIzNDU2Nzg5MA==" />
           <Id>
             <Value _int32="101" />
           </Id>
         </Message>
       </Action>
-      <Action _object="{2E656CCF-BB19-4D7E-BB13-79CBB114ACCA}" _version="1.0" _class="K2L.Viewer.Activities.Actions.DelayAction" IsEnabled="True" Delay="1000" />
+      <Action _object="{2E656CCF-BB19-4D7E-BB13-79CBB114ACCA}" _version="1.0" _class="K2L.Viewer.Activities.Actions.DelayAction" IsEnabled="True" Delay="2000" />
       <Action _object="{E71B63CE-C05C-4341-940F-AED11BCD4F76}" _version="1.0" _class="K2L.Viewer.Activities.Actions.MessageAction" IsEnabled="True">
         <Channel Channel="CAN 2" ChannelType="037d851e-f296-4ad1-9581-b6efb5864a32" Device="Device 1" />
         <Message _object="{E416BBE5-0251-4E8C-82DD-3A258A4E1E24}" _version="1.0" _class="K2L.Viewer.Activities.Messages.CanFdDataMessageWrapper">
-          <Stream bin="DwAAABgBIFUoAjABOAFADEioBAYAAAAIZxABGAEMAAAATUlDUk9DSElQAAAA" />
+          <Stream bin="DwAAABgBIFUoAjABOAFADEiuJAYAAAAIZxABGAEMAAAATUlDUk9DSElQAAAA" />
           <Id>
             <Value _int32="103" />
           </Id>

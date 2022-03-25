@@ -31,40 +31,119 @@
 /*
     Main application
 */
-struct CAN_MSG_OBJ gMsg;
+struct CAN_MSG_OBJ canMsg;
 
-bool busWakeUpOccured = false;
-bool rxOverFlowIntOccured = false;
+static enum CAN_BUS_ERRORS{
+    CAN_ERROR_NONE,
+    CAN_ERROR_ACTIVE,
+    CAN_ERROR_WARNING,
+    CAN_ERROR_PASSIVE
+}canCurrentTxState, canCurrentRxState; 
 
-bool txErrorActiveOccured = false;
-bool txErrorWarningOccured = false;
-bool txErrorPassiveOccured = false;
+static bool rxOverflowStatus;
+static bool txWriteFail;
 
-bool rxErrorActiveOccured = false;
-bool rxErrorWarningOccured = false;
-bool rxErrorPassiveOccured = false;
+void CAN_BusWakeUpActivityCallback(void);
+void CAN_RxBufferOverFlowCallback(void);
 
-static uint8_t CAN_DlcToDataBytesGet(const enum CAN_DLC dlc)
+static void PrintDemoFeaturesMessage(void);
+static void PrintCanMsgObjStruct(struct CAN_MSG_OBJ *rxCanMsg);
+static void CheckRxErrors(void);
+static void CheckTxErrors(void);
+
+int main(void)
 {
-    static const uint8_t dlcByteSize[] = {0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 12U, 16U, 20U, 24U, 32U, 48U, 64U};
-    return dlcByteSize[dlc];
+    bool msgStatus;
+    SYSTEM_Initialize();
+    
+    canFdDrv.RxBufferOverFlowCallbackRegister(&CAN_RxBufferOverFlowCallback);
+    canFdDrv.BusWakeUpActivityCallbackRegister(&CAN_BusWakeUpActivityCallback);
+    canCurrentRxState = CAN_ERROR_NONE;
+    canCurrentTxState = CAN_ERROR_NONE;
+    
+    PrintDemoFeaturesMessage();
+    
+    while(1)
+    {    
+        msgStatus = false;
+        
+        /*See if there is any data in RX FIFO*/
+        if(canFdDrv.ReceivedMessageCountGet() > 0) 
+        {
+            canFdDrv.Receive(&canMsg);
+            rxOverflowStatus = false;
+            LED_GREEN_SetHigh();
+            printf("\r\n[*] Received Message Frame:\r\n---------\r\n");
+            PrintCanMsgObjStruct(&canMsg);
+            msgStatus = true;
+        }
+        
+        if(msgStatus)
+        {
+            /*Sending message with different ID than that of received message*/
+            canMsg.msgId += 20,
+                    
+            /*Transmit back the received message*/
+            printf("\r\n[*] Transmitting Message Frame:\r\n---------\r\n");
+            PrintCanMsgObjStruct(&canMsg);
+            msgStatus = canFdDrv.Transmit(CAN1_TX_TXQ, &canMsg);
+            if(msgStatus == CAN_TX_MSG_REQUEST_SUCCESS)
+            {
+                txWriteFail = false;
+                printf("Received CAN Message fed to Transmit FIFO successfully\r\n");
+            }
+            else
+            {
+                txWriteFail = true;
+                printf("CAN Message Write to FIFO Failure\r\n");
+            }
+        }
+
+        /*Check if any errors while receiving*/
+        CheckRxErrors();
+
+        /*Check if any errors while transmitting*/
+        CheckTxErrors();
+        
+        /*Check if write or read FIFO errors*/
+        if(rxOverflowStatus || txWriteFail)
+        {
+            LED_RED_SetHigh();
+        }
+        LED_GREEN_SetLow();
+    }
 }
 
-static void PrintWelcomeMessage(void)
+void CAN_BusWakeUpActivityCallback(void)
+{
+    printf("\r\nBus Wake-Up Callback can be used \r\nto handle wake-up activities\r\n");
+}
+
+void CAN_RxBufferOverFlowCallback(void)
+{
+    LED_RED_SetHigh();
+    printf("\r\n\r\nCAN Receive Buffer Overflow Occurred\r\n");
+    printf("CAN Receive buffer overflow occurs if receive buffer \r\nis filled faster than it is being read\r\n");   
+}
+
+static void PrintDemoFeaturesMessage(void)
 {
     printf("\r\n");
     printf("*******************************************************\r\n");
     printf("dsPIC33CK Curiosity CAN FD Demo\r\n");
     printf("*******************************************************\r\n");
-}
-
-static void PrintFeaturesMessage(void)
-{
     
     printf("DEMO KEY FEATURES:\r\n");
     printf("* CAN-FD communication using the on-chip CAN-FD peripheral in dsPIC33CK256MP508\r\n");
     printf("* Loopback CAN-FD data frame if received  message ID is 0x64 or 0x65 from the bus\r\n");
     printf("* Green LED will blink if data message  with 0x64 or 0x65 is received and\r\n transmitted back successfully\r\n\r\n");
+
+}
+
+static uint8_t CAN_DlcToDataBytesGet(const enum CAN_DLC dlc)
+{
+    static const uint8_t dlcByteSize[] = {0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 12U, 16U, 20U, 24U, 32U, 48U, 64U};
+    return dlcByteSize[dlc];
 }
 
 static void printCanDatainHex(struct CAN_MSG_OBJ *rxCanMsg)
@@ -77,7 +156,7 @@ static void printCanDatainHex(struct CAN_MSG_OBJ *rxCanMsg)
     printf("\r\n");
 }
 
-static void printCanMsgObjStruct(struct CAN_MSG_OBJ *rxCanMsg)
+static void PrintCanMsgObjStruct(struct CAN_MSG_OBJ *rxCanMsg)
 {
     printf("------------------------------------------------------------------\r\n");
     printf("[*] Msg ID: 0x%lX\r\n", rxCanMsg->msgId);
@@ -91,156 +170,102 @@ static void printCanMsgObjStruct(struct CAN_MSG_OBJ *rxCanMsg)
     printf("------------------------------------------------------------------\r\n");
 }
 
-static enum CAN_TX_MSG_REQUEST_STATUS canMessageWrite(
-    int fifoNum,
-    uint32_t msgIde, 
-    bool idType, 
-    bool formatType,  
-    bool frameType,
-    uint8_t len, 
-    bool brs, 
-    uint8_t *data
-) 
-{   
-    gMsg.msgId = msgIde;
-    gMsg.field.formatType = formatType;
-    gMsg.field.frameType = frameType;
-    gMsg.field.idType = idType;
-    gMsg.field.dlc = len;
-    gMsg.field.brs = brs;
-    gMsg.data = data;
-    printf("\r\n[*] Transmitting Message Frame:\r\n---------\r\n");
-    printCanMsgObjStruct(&gMsg);
-    return CAN_FD.Transmit(fifoNum, &gMsg);
-}
-
-bool readCanMsgObjTasks(struct CAN_MSG_OBJ *rxMsg)
+static void CheckTxErrors(void)
 {
-    bool status = false;
-    if(CAN_FD.ReceivedMessageCountGet() > 0) 
+    
+    /**TX Errors**/
+    
+    /*Print if node reached TX Passive Error state*/
+    if(canFdDrv.IsTxErrorActive())
     {
-        CAN_FD.Receive(rxMsg);
-        LED_GREEN_SetHigh();
-        printf("\r\n[*] Received Message Frame:\r\n---------\r\n");
-        printCanMsgObjStruct(rxMsg);
-        status = true;
+        if(canCurrentTxState != CAN_ERROR_PASSIVE)
+        {
+            printf("CAN node is in TX Error Passive state, 127 < Error Count < 256 \r\n");
+            canCurrentTxState = CAN_ERROR_PASSIVE;
+        }
     }
     
-    return status;
+    /*Print if node reached TX Warning state*/
+    else if(canFdDrv.IsTxErrorWarning())
+    {
+        if(canCurrentTxState != CAN_ERROR_WARNING)
+        {
+            printf("CAN node is in TX Error Warning state, 94 < Error Count < 128  \r\n");
+            canCurrentTxState = CAN_ERROR_WARNING;
+        }
+    }
+    
+    /*Print if node reached TX Active Error state*/
+    else if(canFdDrv.IsTxErrorActive())
+    {
+        if(canCurrentTxState != CAN_ERROR_ACTIVE)
+        {
+            printf("CAN node is in TX Error Active state, 0 < Error Count < 95  \r\n");
+            canCurrentTxState = CAN_ERROR_ACTIVE;
+        }
+    }
+    
+    /*Reset status if no errors*/
+    else
+    {
+        canCurrentTxState = CAN_ERROR_NONE;
+        LED_RED_SetLow();
+    }
+    
+    /*Set status to RED if any errors*/ 
+    if(canCurrentRxState != CAN_ERROR_NONE)
+    {
+        LED_RED_SetHigh();
+    }
+    
+    /*CAN node reaches Bus-Off state if error count is grater than 255*/
 }
 
-void CAN_BusWakeUpActivityHandler(void)
+static void CheckRxErrors(void)
 {
-    printf("\r\nBus Wake-Up Callback can be used \r\nto handle wake-up activities\r\n");
-    busWakeUpOccured = true;
-}
-
-void CAN_RxBufferOverFlowHandler()
-{
-    printf("\r\n\r\nCAN Receive Buffer Overflow Occurred\r\n");
-    printf("CAN Receive buffer overflow occurs if receive buffer \r\nis filled faster than it is being read\r\n");
-    rxOverFlowIntOccured = true;    
-}
-
-void PrintIfAnyRxErrors(void)
-{
+    
     /**RX Errors */
     
-    //Print if node reached RX Active Error state
-    if(CAN_FD.IsRxErrorActive()&&(!rxErrorActiveOccured))
+    /*Print if node reached RX Passive Error state*/
+    if(canFdDrv.IsRxErrorPassive())
     {
-        LED_RED_SetHigh();
-        printf("RX Active Error Occurred, 0 < Error Count < 95 \r\n");
-        rxErrorActiveOccured = true;
-    }
-    
-    //Print if node reached RX Warning state
-    if(CAN_FD.IsRxErrorWarning()&&(!rxErrorWarningOccured))
-    {
-        printf("RX Warning Error Occurred, 94 < Error Count < 128 \r\n");
-        rxErrorWarningOccured = true;
-    }
-    
-    //Print if node reached RX Passive Error state
-    if(CAN_FD.IsRxErrorPassive()&&(!rxErrorPassiveOccured))
-    {
-        printf("RX Passive Error Occurred, 127 < Error Count < 256\r\n");
-        rxErrorPassiveOccured = true;
-    }
-}
-
-void PrintIfAnyTxErrors(void)
-{
-    /**TX Errors */
-    
-    //Print if node reached TX Active Error state
-    if(CAN_FD.IsTxErrorActive()&&(!txErrorActiveOccured))
-    {
-        LED_RED_SetHigh();
-        printf("TX Active Error Occurred, 0 < Error Count < 95  \r\n");
-        txErrorActiveOccured = true;
-    }
-    
-    //Print if node reached TX Warning state
-    if(CAN_FD.IsTxErrorWarning()&&(!txErrorWarningOccured))
-    {
-        printf("TX Warning Error Occurred, 94 < Error Count < 128  \r\n");
-        txErrorWarningOccured = true;
-    }
-    
-    //Print if node reached TX Passive Error state
-    if(CAN_FD.IsTxErrorPassive()&&(!txErrorPassiveOccured))
-    {
-        printf("TX Passive Error Occurred, 127 < Error Count < 256 \r\n");
-        txErrorPassiveOccured = true;
-    }
-    
-    //CAN node reaches Bus-Off state if error count is grater than 255
-}
-
-int main(void)
-{
-    bool msgStatus;
-    SYSTEM_Initialize();
-    CAN_FD.RxBufferOverFlowCallbackRegister(&CAN_RxBufferOverFlowHandler);
-    CAN_FD.BusWakeUpActivityCallbackRegister(&CAN_BusWakeUpActivityHandler);
-    PrintWelcomeMessage();
-    PrintFeaturesMessage();
-    while(1)
-    {    
-        /*Check if any errors while receiving*/
-        PrintIfAnyRxErrors();
-        
-        /*See if there is any data in RX FIFO*/
-        msgStatus = readCanMsgObjTasks(&gMsg);
-        if(msgStatus)
+        if(canCurrentRxState != CAN_ERROR_PASSIVE)
         {
-            LED_RED_SetLow();
-
-            /*Transmit back the received message*/
-            msgStatus = canMessageWrite(
-                    CAN1_TX_TXQ,                //Transmit FIFO 
-                    gMsg.msgId + 20,            //CAN Message ID (receive message ID + 20)
-                    gMsg.field.idType,          //Standard or Extended ID
-                    gMsg.field.formatType,      //CAN_FD_FORMAT for CAN-FD frames
-                    gMsg.field.frameType,       //Data frame or RTR frame
-                    gMsg.field.dlc,             //Data length
-                    gMsg.field.brs,             //Specifies if bit-rate switching is enabled 
-                    (uint8_t *)gMsg.data        //Data 
-                    );
-            if(msgStatus == CAN_TX_MSG_REQUEST_SUCCESS)
-            {
-                printf("Received CAN Message fed to Transmit FIFO successfully\r\n");
-            }
-            else
-            {
-                LED_RED_SetHigh();
-                printf("CAN Message Write to FIFO Failure\r\n");
-            }
+            printf("CAN node is in RX Error Passive state, 127 < Error Count < 256\r\n");
+            canCurrentRxState = CAN_ERROR_PASSIVE;
         }
-        
-        /*Check if any errors while transmitting*/
-        PrintIfAnyTxErrors();
-        LED_GREEN_SetLow();
+    }
+    
+    /*Print if node reached RX Warning state*/
+    else if(canFdDrv.IsRxErrorWarning())
+    {
+        if(canCurrentRxState != CAN_ERROR_WARNING)
+        {
+            printf("CAN node is in RX Error Warning state, 94 < Error Count < 128 \r\n");
+            canCurrentRxState = CAN_ERROR_WARNING;
+        }
+    }
+    
+    /*Print if node reached RX Active Error state*/
+    else if(canFdDrv.IsRxErrorActive())
+    {
+        if(canCurrentRxState != CAN_ERROR_ACTIVE)
+        {
+            printf("CAN node is in RX Error Active state, 0 < Error Count < 95 \r\n");
+            canCurrentRxState = CAN_ERROR_ACTIVE;
+        }
+    }
+    
+    /*Reset status if no errors*/
+    else
+    {
+        LED_RED_SetLow();
+        canCurrentRxState = CAN_ERROR_NONE;
+    }
+    
+    /*Set status to RED if any errors*/ 
+    if(canCurrentRxState != CAN_ERROR_NONE)
+    {
+        LED_RED_SetHigh();
     }
 }
