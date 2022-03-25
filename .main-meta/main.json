@@ -35,11 +35,11 @@
          }
       },
 	  "peripherals":[
-         "CAN FD",
+         "CAN FD"
       ],
       "keywords":[
          "CAN FD",
-         "CAN",
+         "CAN"
       ]
    }
 }
