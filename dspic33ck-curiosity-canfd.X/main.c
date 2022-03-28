@@ -19,9 +19,6 @@
     THIS SOFTWARE.
 */
 
-#define CAN_POT_VALUE_GET_ID 0x10 
-#define ADC_RESOLUTION 12
-
 #include "mcc_generated_files/system/system.h"
 #include "mcc_generated_files/can/can1.h"
 #include "mcc_generated_files/system/pins.h"
@@ -38,7 +35,7 @@ static enum CAN_BUS_ERRORS{
     CAN_ERROR_ACTIVE,
     CAN_ERROR_WARNING,
     CAN_ERROR_PASSIVE
-}canCurrentTxState, canCurrentRxState; 
+}canPreviousTxState, canPreviousRxState; 
 
 static bool rxOverflowStatus;
 static bool txWriteFail;
@@ -58,8 +55,8 @@ int main(void)
     
     CAN_FD_Driver.RxBufferOverFlowCallbackRegister(&CAN_RxBufferOverFlowCallback);
     CAN_FD_Driver.BusWakeUpActivityCallbackRegister(&CAN_BusWakeUpActivityCallback);
-    canCurrentRxState = CAN_ERROR_NONE;
-    canCurrentTxState = CAN_ERROR_NONE;
+    canPreviousRxState = CAN_ERROR_NONE;
+    canPreviousTxState = CAN_ERROR_NONE;
     
     PrintDemoFeaturesMessage();
     
@@ -177,42 +174,42 @@ static void CheckTxErrors(void)
     /*If node reached TX Passive Error state*/
     if(CAN_FD_Driver.IsTxErrorActive())
     {
-        if(canCurrentTxState != CAN_ERROR_PASSIVE)
+        if(canPreviousTxState != CAN_ERROR_PASSIVE)
         {
             printf("CAN node is in TX Error Passive state, 127 < Error Count < 256 \r\n");
-            canCurrentTxState = CAN_ERROR_PASSIVE;
+            canPreviousTxState = CAN_ERROR_PASSIVE;
         }
     }
     
     /*If node reached TX Warning state*/
     else if(CAN_FD_Driver.IsTxErrorWarning())
     {
-        if(canCurrentTxState != CAN_ERROR_WARNING)
+        if(canPreviousTxState != CAN_ERROR_WARNING)
         {
             printf("CAN node is in TX Error Warning state, 94 < Error Count < 128  \r\n");
-            canCurrentTxState = CAN_ERROR_WARNING;
+            canPreviousTxState = CAN_ERROR_WARNING;
         }
     }
     
     /*If node reached TX Active Error state*/
     else if(CAN_FD_Driver.IsTxErrorActive())
     {
-        if(canCurrentTxState != CAN_ERROR_ACTIVE)
+        if(canPreviousTxState != CAN_ERROR_ACTIVE)
         {
             printf("CAN node is in TX Error Active state, 0 < Error Count < 95  \r\n");
-            canCurrentTxState = CAN_ERROR_ACTIVE;
+            canPreviousTxState = CAN_ERROR_ACTIVE;
         }
     }
     
     /*Reset status if no errors*/
     else
     {
-        canCurrentTxState = CAN_ERROR_NONE;
+        canPreviousTxState = CAN_ERROR_NONE;
         LED_RED_SetLow();
     }
     
     /*Set status to RED if any errors*/ 
-    if(canCurrentRxState != CAN_ERROR_NONE)
+    if(canPreviousTxState != CAN_ERROR_NONE)
     {
         LED_RED_SetHigh();
     }
@@ -228,30 +225,30 @@ static void CheckRxErrors(void)
     /*If node reached RX Passive Error state*/
     if(CAN_FD_Driver.IsRxErrorPassive())
     {
-        if(canCurrentRxState != CAN_ERROR_PASSIVE)
+        if(canPreviousRxState != CAN_ERROR_PASSIVE)
         {
             printf("CAN node is in RX Error Passive state, 127 < Error Count < 256\r\n");
-            canCurrentRxState = CAN_ERROR_PASSIVE;
+            canPreviousRxState = CAN_ERROR_PASSIVE;
         }
     }
     
     /*If node reached RX Warning state*/
     else if(CAN_FD_Driver.IsRxErrorWarning())
     {
-        if(canCurrentRxState != CAN_ERROR_WARNING)
+        if(canPreviousRxState != CAN_ERROR_WARNING)
         {
             printf("CAN node is in RX Error Warning state, 94 < Error Count < 128 \r\n");
-            canCurrentRxState = CAN_ERROR_WARNING;
+            canPreviousRxState = CAN_ERROR_WARNING;
         }
     }
     
     /*If node reached RX Active Error state*/
     else if(CAN_FD_Driver.IsRxErrorActive())
     {
-        if(canCurrentRxState != CAN_ERROR_ACTIVE)
+        if(canPreviousRxState != CAN_ERROR_ACTIVE)
         {
             printf("CAN node is in RX Error Active state, 0 < Error Count < 95 \r\n");
-            canCurrentRxState = CAN_ERROR_ACTIVE;
+            canPreviousRxState = CAN_ERROR_ACTIVE;
         }
     }
     
@@ -259,11 +256,11 @@ static void CheckRxErrors(void)
     else
     {
         LED_RED_SetLow();
-        canCurrentRxState = CAN_ERROR_NONE;
+        canPreviousRxState = CAN_ERROR_NONE;
     }
     
     /*Set status to RED if any errors*/ 
-    if(canCurrentRxState != CAN_ERROR_NONE)
+    if(canPreviousRxState != CAN_ERROR_NONE)
     {
         LED_RED_SetHigh();
     }
