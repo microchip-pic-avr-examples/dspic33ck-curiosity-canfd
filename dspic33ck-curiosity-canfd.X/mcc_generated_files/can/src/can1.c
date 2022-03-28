@@ -81,7 +81,7 @@ enum CAN1_RX_FIFO_STATUS
 };
 
 // Section: Driver Interface
-const struct CAN_INTERFACE canFdDrv = {
+const struct CAN_INTERFACE CAN_FD_Driver = {
     .Initialize = CAN1_Initialize,
     .Deinitialize = CAN1_Deinitialize,
     .OperationModeSet = CAN1_OperationModeSet,

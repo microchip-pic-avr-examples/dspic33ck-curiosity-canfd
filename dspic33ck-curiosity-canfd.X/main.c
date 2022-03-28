@@ -56,8 +56,8 @@ int main(void)
     bool msgStatus;
     SYSTEM_Initialize();
     
-    canFdDrv.RxBufferOverFlowCallbackRegister(&CAN_RxBufferOverFlowCallback);
-    canFdDrv.BusWakeUpActivityCallbackRegister(&CAN_BusWakeUpActivityCallback);
+    CAN_FD_Driver.RxBufferOverFlowCallbackRegister(&CAN_RxBufferOverFlowCallback);
+    CAN_FD_Driver.BusWakeUpActivityCallbackRegister(&CAN_BusWakeUpActivityCallback);
     canCurrentRxState = CAN_ERROR_NONE;
     canCurrentTxState = CAN_ERROR_NONE;
     
@@ -68,9 +68,9 @@ int main(void)
         msgStatus = false;
         
         /*See if there is any data in RX FIFO*/
-        if(canFdDrv.ReceivedMessageCountGet() > 0) 
+        if(CAN_FD_Driver.ReceivedMessageCountGet() > 0) 
         {
-            canFdDrv.Receive(&canMsg);
+            CAN_FD_Driver.Receive(&canMsg);
             rxOverflowStatus = false;
             LED_GREEN_SetHigh();
             printf("\r\n[*] Received Message Frame:\r\n---------\r\n");
@@ -86,7 +86,7 @@ int main(void)
             /*Transmit back the received message*/
             printf("\r\n[*] Transmitting Message Frame:\r\n---------\r\n");
             PrintCanMsgObjStruct(&canMsg);
-            msgStatus = canFdDrv.Transmit(CAN1_TX_TXQ, &canMsg);
+            msgStatus = CAN_FD_Driver.Transmit(CAN1_TX_TXQ, &canMsg);
             if(msgStatus == CAN_TX_MSG_REQUEST_SUCCESS)
             {
                 txWriteFail = false;
@@ -133,7 +133,6 @@ static void PrintDemoFeaturesMessage(void)
     printf("dsPIC33CK Curiosity CAN FD Demo\r\n");
     printf("*******************************************************\r\n");
     
-    printf("DEMO KEY FEATURES:\r\n");
     printf("* CAN-FD communication using the on-chip CAN-FD peripheral in dsPIC33CK256MP508\r\n");
     printf("* Loopback CAN-FD data frame if received  message ID is 0x64 or 0x65 from the bus\r\n");
     printf("* Green LED will blink if data message  with 0x64 or 0x65 is received and\r\n transmitted back successfully\r\n\r\n");
@@ -175,8 +174,8 @@ static void CheckTxErrors(void)
     
     /**TX Errors**/
     
-    /*Print if node reached TX Passive Error state*/
-    if(canFdDrv.IsTxErrorActive())
+    /*If node reached TX Passive Error state*/
+    if(CAN_FD_Driver.IsTxErrorActive())
     {
         if(canCurrentTxState != CAN_ERROR_PASSIVE)
         {
@@ -185,8 +184,8 @@ static void CheckTxErrors(void)
         }
     }
     
-    /*Print if node reached TX Warning state*/
-    else if(canFdDrv.IsTxErrorWarning())
+    /*If node reached TX Warning state*/
+    else if(CAN_FD_Driver.IsTxErrorWarning())
     {
         if(canCurrentTxState != CAN_ERROR_WARNING)
         {
@@ -195,8 +194,8 @@ static void CheckTxErrors(void)
         }
     }
     
-    /*Print if node reached TX Active Error state*/
-    else if(canFdDrv.IsTxErrorActive())
+    /*If node reached TX Active Error state*/
+    else if(CAN_FD_Driver.IsTxErrorActive())
     {
         if(canCurrentTxState != CAN_ERROR_ACTIVE)
         {
@@ -226,8 +225,8 @@ static void CheckRxErrors(void)
     
     /**RX Errors */
     
-    /*Print if node reached RX Passive Error state*/
-    if(canFdDrv.IsRxErrorPassive())
+    /*If node reached RX Passive Error state*/
+    if(CAN_FD_Driver.IsRxErrorPassive())
     {
         if(canCurrentRxState != CAN_ERROR_PASSIVE)
         {
@@ -236,8 +235,8 @@ static void CheckRxErrors(void)
         }
     }
     
-    /*Print if node reached RX Warning state*/
-    else if(canFdDrv.IsRxErrorWarning())
+    /*If node reached RX Warning state*/
+    else if(CAN_FD_Driver.IsRxErrorWarning())
     {
         if(canCurrentRxState != CAN_ERROR_WARNING)
         {
@@ -246,8 +245,8 @@ static void CheckRxErrors(void)
         }
     }
     
-    /*Print if node reached RX Active Error state*/
-    else if(canFdDrv.IsRxErrorActive())
+    /*If node reached RX Active Error state*/
+    else if(CAN_FD_Driver.IsRxErrorActive())
     {
         if(canCurrentRxState != CAN_ERROR_ACTIVE)
         {

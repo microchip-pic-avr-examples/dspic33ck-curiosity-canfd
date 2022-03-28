@@ -54,127 +54,127 @@
            This allows defining a structure with application specific name using 
            the 'Custom Name' field. Application specific name allows the API Portability.
 */
-extern const struct CAN_INTERFACE canFdDrv;
+extern const struct CAN_INTERFACE CAN_FD_Driver;
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_Initialize API
  */
-#define canFdDrv_Initialize CAN1_Initialize
+#define CAN_FD_Driver_Initialize CAN1_Initialize
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_Deinitialize API
  */
-#define canFdDrv_Deinitialize CAN1_Deinitialize
+#define CAN_FD_Driver_Deinitialize CAN1_Deinitialize
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_OperationModeSet API
  */
-#define canFdDrv_OperationModeSet CAN1_OperationModeSet
+#define CAN_FD_Driver_OperationModeSet CAN1_OperationModeSet
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_OperationModeGet API
  */
-#define canFdDrv_OperationModeGet CAN1_OperationModeGet
+#define CAN_FD_Driver_OperationModeGet CAN1_OperationModeGet
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_Receive API
  */
-#define canFdDrv_Receive CAN1_Receive
+#define CAN_FD_Driver_Receive CAN1_Receive
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_ReceiveMessageGet API
  */
-#define canFdDrv_ReceiveMessageGet CAN1_ReceiveMessageGet
+#define CAN_FD_Driver_ReceiveMessageGet CAN1_ReceiveMessageGet
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_Transmit API
  */
-#define canFdDrv_Transmit CAN1_Transmit
+#define CAN_FD_Driver_Transmit CAN1_Transmit
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_TransmitFIFOStatusGet API
  */
-#define canFdDrv_TransmitFIFOStatusGet CAN1_TransmitFIFOStatusGet
+#define CAN_FD_Driver_TransmitFIFOStatusGet CAN1_TransmitFIFOStatusGet
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_IsBusOff API
  */
-#define canFdDrv_IsBusOff CAN1_IsBusOff
+#define CAN_FD_Driver_IsBusOff CAN1_IsBusOff
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_IsTxErrorPassive API
  */
-#define canFdDrv_IsTxErrorPassive CAN1_IsTxErrorPassive
+#define CAN_FD_Driver_IsTxErrorPassive CAN1_IsTxErrorPassive
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_IsTxErrorWarning API
  */
-#define canFdDrv_IsTxErrorWarning CAN1_IsTxErrorWarning
+#define CAN_FD_Driver_IsTxErrorWarning CAN1_IsTxErrorWarning
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_IsTxErrorActive API
  */
-#define canFdDrv_IsTxErrorActive CAN1_IsTxErrorActive
+#define CAN_FD_Driver_IsTxErrorActive CAN1_IsTxErrorActive
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_IsRxErrorPassive API
  */
-#define canFdDrv_IsRxErrorPassive CAN1_IsRxErrorPassive
+#define CAN_FD_Driver_IsRxErrorPassive CAN1_IsRxErrorPassive
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_IsRxErrorWarning API
  */
-#define canFdDrv_IsRxErrorWarning CAN1_IsRxErrorWarning
+#define CAN_FD_Driver_IsRxErrorWarning CAN1_IsRxErrorWarning
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_IsRxErrorActive API
  */
-#define canFdDrv_IsRxErrorActive CAN1_IsRxErrorActive
+#define CAN_FD_Driver_IsRxErrorActive CAN1_IsRxErrorActive
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_Sleep API
  */
-#define canFdDrv_Sleep CAN1_Sleep
+#define CAN_FD_Driver_Sleep CAN1_Sleep
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_ReceivedMessageCountGet API
  */
-#define canFdDrv_ReceivedMessageCountGet CAN1_ReceivedMessageCountGet
+#define CAN_FD_Driver_ReceivedMessageCountGet CAN1_ReceivedMessageCountGet
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_InvalidMessageCallbackRegister API
  */
-#define canFdDrv_InvalidMessageCallbackRegister CAN1_InvalidMessageCallbackRegister
+#define CAN_FD_Driver_InvalidMessageCallbackRegister CAN1_InvalidMessageCallbackRegister
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_BusWakeUpActivityCallbackRegister API
  */
-#define canFdDrv_BusWakeUpActivityCallbackRegister CAN1_BusWakeUpActivityCallbackRegister
+#define CAN_FD_Driver_BusWakeUpActivityCallbackRegister CAN1_BusWakeUpActivityCallbackRegister
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_BusErrorCallbackRegister API
  */
-#define canFdDrv_BusErrorCallbackRegister CAN1_BusErrorCallbackRegister
+#define CAN_FD_Driver_BusErrorCallbackRegister CAN1_BusErrorCallbackRegister
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_ModeChangeCallbackRegister API
  */
-#define canFdDrv_ModeChangeCallbackRegister CAN1_ModeChangeCallbackRegister
+#define CAN_FD_Driver_ModeChangeCallbackRegister CAN1_ModeChangeCallbackRegister
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_SystemErrorCallbackRegister API
  */
-#define canFdDrv_SystemErrorCallbackRegister CAN1_SystemErrorCallbackRegister
+#define CAN_FD_Driver_SystemErrorCallbackRegister CAN1_SystemErrorCallbackRegister
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_TxAttemptCallbackRegister API
  */
-#define canFdDrv_TxAttemptCallbackRegister CAN1_TxAttemptCallbackRegister
+#define CAN_FD_Driver_TxAttemptCallbackRegister CAN1_TxAttemptCallbackRegister
 /**
  * @ingroup  candriver
  * @brief    This macro defines the Custom Name for \ref CAN1_RxBufferOverFlowCallbackRegister API
  */
-#define canFdDrv_RxBufferOverFlowCallbackRegister CAN1_RxBufferOverFlowCallbackRegister
+#define CAN_FD_Driver_RxBufferOverFlowCallbackRegister CAN1_RxBufferOverFlowCallbackRegister
 
 
 /**
