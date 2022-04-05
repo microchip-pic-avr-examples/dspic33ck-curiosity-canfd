@@ -29,6 +29,7 @@ nbproject/disassembly/
 build/
 dist/
 private/
+debug/
 disassembly/
 *.zip
 !code-templates.zip
