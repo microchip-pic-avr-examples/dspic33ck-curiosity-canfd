@@ -50,7 +50,9 @@ CAN FD is configured in such a way that it ignores any messages other than above
 **CAN FD Analyzer Tool Setup**
 
 - Configure CAN-FD analyzer clock to 1 Mbps nominal bit-rate and 5 Mbps data bit-rate
-- Start the analyzer log and create CAN-FD data frames with message ID 101(0x64), 102(0x65) and 103(0x66)
+- Create CAN-FD data frame with message ID 101(0x64) with valid data length as per CAN-FD protocol (Eg. 0,1,2,3,4,5,6,7,8,12,16,20,24,32,48,64)
+- Similarly create CAN-FD frames with ID 102(0x65), 103(0x66) with above mentioned valid data length
+- Start the analyzer log and send the frames
 
 ## Operation
 
