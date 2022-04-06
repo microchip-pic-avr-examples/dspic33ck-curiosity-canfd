@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Activities>
+  <Activity _object="{02A766C9-FD36-4C00-A9A4-2968201A79EB}" _version="1.0" _class="K2L.Viewer.Activities.Activity" Description="Activity 1" Id="1bab5466-7b43-43e4-b91d-e91c161e6462">
+    <Sequence IsEnabled="True">
+      <Action _object="{E71B63CE-C05C-4341-940F-AED11BCD4F76}" _version="1.0" _class="K2L.Viewer.Activities.Actions.MessageAction" IsEnabled="True">
+        <Channel Channel="CAN 2" ChannelType="037d851e-f296-4ad1-9581-b6efb5864a32" Device="Device 1" />
+        <Message _object="{E416BBE5-0251-4E8C-82DD-3A258A4E1E24}" _version="1.0" _class="K2L.Viewer.Activities.Messages.CanFdDataMessageWrapper">
+          <Stream bin="DwAAABgBIFUoAjABOAFADEisJAQAAAAIZBgBDAAAAE1JQ1JPQ0hJUAAAAA==" />
+          <Id>
+            <Value _int32="100" />
+          </Id>
+        </Message>
+      </Action>
+      <Action _object="{2E656CCF-BB19-4D7E-BB13-79CBB114ACCA}" _version="1.0" _class="K2L.Viewer.Activities.Actions.DelayAction" IsEnabled="True" Delay="1000" />
+      <Action _object="{E71B63CE-C05C-4341-940F-AED11BCD4F76}" _version="1.0" _class="K2L.Viewer.Activities.Actions.MessageAction" IsEnabled="True">
+        <Channel Channel="CAN 2" ChannelType="037d851e-f296-4ad1-9581-b6efb5864a32" Device="Device 1" />
+        <Message _object="{E416BBE5-0251-4E8C-82DD-3A258A4E1E24}" _version="1.0" _class="K2L.Viewer.Activities.Messages.CanFdDataMessageWrapper">
+          <Stream bin="DwAAABgBIFUoAjABOAFADEitJAYAAAAIZRABGAFAAAAAQUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVogYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXogMTIzNDU2Nzg5MA==" />
+          <Id>
+            <Value _int32="101" />
+          </Id>
+        </Message>
+      </Action>
+      <Action _object="{2E656CCF-BB19-4D7E-BB13-79CBB114ACCA}" _version="1.0" _class="K2L.Viewer.Activities.Actions.DelayAction" IsEnabled="True" Delay="2000" />
+      <Action _object="{E71B63CE-C05C-4341-940F-AED11BCD4F76}" _version="1.0" _class="K2L.Viewer.Activities.Actions.MessageAction" IsEnabled="True">
+        <Channel Channel="CAN 2" ChannelType="037d851e-f296-4ad1-9581-b6efb5864a32" Device="Device 1" />
+        <Message _object="{E416BBE5-0251-4E8C-82DD-3A258A4E1E24}" _version="1.0" _class="K2L.Viewer.Activities.Messages.CanFdDataMessageWrapper">
+          <Stream bin="DwAAABgBIFUoAjABOAFADEiuJAYAAAAIZxABGAEMAAAATUlDUk9DSElQAAAA" />
+          <Id>
+            <Value _int32="103" />
+          </Id>
+        </Message>
+      </Action>
+    </Sequence>
+  </Activity>
+</Activities>
