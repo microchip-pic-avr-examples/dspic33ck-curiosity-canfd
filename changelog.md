@@ -1,3 +1,9 @@
+# dspic33ck-curiosity-can v1.0.1
+
+### Release Highlights
+
+- Core and melody versions upgraded to the latest public version.
+
 # dspic33ck-curiosity-canfd v1.0.0
 
 ### Release Highlights
