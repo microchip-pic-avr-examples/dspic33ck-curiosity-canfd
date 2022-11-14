@@ -2,7 +2,7 @@
 
 ### Release Highlights
 
-- Versions upgraded to latest public release :: Core - 5.4.11 and melody - 2.3.1
+- Versions upgraded to latest public release :: Core - 5.4.11 and MCC Melody Core - 2.3.1
 
 # dspic33ck-curiosity-canfd v1.0.0
 
